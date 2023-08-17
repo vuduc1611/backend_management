@@ -1,6 +1,7 @@
 package net.javaguides.springboot.repository;
 
 import net.javaguides.springboot.Dto.EmployeeResponse;
+import net.javaguides.springboot.model.Position;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,13 +13,19 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Integer>, JpaSpecificationExecutor<Employee> {
-    @Query(value = "SELECT e FROM Employee e WHERE e.departmentId = :id")
+public  interface EmployeeRepository extends JpaRepository<Employee, Integer>, JpaSpecificationExecutor<Employee> {
+
+//    @Query("SELECT e.id, e.fname, e.lname, e.gender, e.dob, e.address, e.phone, e.email, e.departmentId, e.positionId FROM Employee e")
+//    List<EmployeeResponse> findAllData();
+
+    @Query("SELECT e FROM Employee e WHERE e.departmentId = :id")
     List<Employee> findEmployeeByDept(@Param("id") Integer id);
 
 
@@ -30,14 +37,17 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer>, Jp
     @Query("DELETE  FROM Employee e WHERE e.id IN :ids")
     void deleteByIdIn(List<Integer> ids);
 
-
-
     @Query("SELECT e FROM Employee e WHERE 1 = 1 " +
             "AND (:id IS NULL OR e.id = :id) " +
             "AND (:fname IS NULL OR e.fname LIKE %:fname%) " +
             "AND (:lname IS NULL OR e.lname LIKE %:lname%) " +
-            "AND (:departmentId IS NULL OR e.departmentId = :departmentId) " +
-            "AND (:positionId IS NULL OR e.positionId = :positionId)")
-    Page<Employee> findEmployeesByPageWithFilters(Pageable pageable, Integer id, String fname, String lname,Integer departmentId,Integer positionId );
-//    AND (:departmentId IS NULL OR e.departmentId LIKE %:departmentId%) AND (:positionId IS NULL OR e.positionId LIKE %:positionId%)
+            "AND (COALESCE(:departmentIds) IS NULL OR e.departmentId IN (:departmentIds)) " +
+            "AND (COALESCE(:positionIds) IS NULL OR e.positionId IN (:positionIds))")
+    Page<Employee> findEmployeesByPageWithFilters(Pageable pageable, Integer id, String fname, String lname, @Param("departmentIds") List<Integer> departmentIds, @Param("positionIds") List<Integer> positionIds);
+
+    @Query("SELECT e FROM Employee e WHERE 1 = 1 AND departmentId = :idDept AND positionId = :idPos")
+    List<Employee> findEmployeesFromDeptAndPos(@PathVariable("idDept") Integer idDept, @PathVariable("idPos") Integer idPos);
+
+//    @Query ("SELECT  FROM Employee e WHERE departmentID = :idDept")
+//    List<Position> findExistPosInDept(Integer idDept);
 }

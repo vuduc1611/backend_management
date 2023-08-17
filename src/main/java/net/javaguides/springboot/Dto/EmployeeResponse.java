@@ -23,9 +23,7 @@ public class EmployeeResponse {
 
     private String email;
 
-    private String password;
+    private String departmentId;
 
-    private String departmentName;
-
-    private String positionName;
+    private String positionId;
 }

@@ -4,6 +4,8 @@ import net.javaguides.springboot.Dto.EmployeeResponse;
 import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.repository.EmployeeRepository;
 import net.javaguides.springboot.service.impl.EmployeeService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,13 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
+    @Autowired
+    private ModelMapper modelMapper;
+
     private EmployeeService employeeService;
     private EmployeeRepository employeeRepository;
 
@@ -30,13 +34,14 @@ public class EmployeeController {
     }
 
     // build get all employees REST API
-//    @GetMapping("")
-//    public List<Employee> getAllEmployees() {
-//        return employeeService.findAll();
-//    }
+    @GetMapping("/all")
+    public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
+        List<EmployeeResponse> employeeResponseList = employeeService.findAllData().stream().map(employee -> modelMapper.map(employee, EmployeeResponse.class)).collect(Collectors.toList());
+        return new ResponseEntity<List<EmployeeResponse>>(employeeResponseList, HttpStatus.OK);
+    }
 
     // build get employee by id REST API
-    // http://localhost:8080/api/employees/1
+    // http://localhost:8080/api/employees
 
     @GetMapping("")
     public ResponseEntity<Page<Employee>> getAllEmployees(
@@ -47,24 +52,36 @@ public class EmployeeController {
             @RequestParam(required = false) Integer id,
             @RequestParam(required = false) String fname,
             @RequestParam(required = false) String lname,
-            @RequestParam(required = false) Integer departmentId,
-            @RequestParam(required = false) Integer positionId
+            @RequestParam(required = false) List<Integer> departmentIds,
+            @RequestParam(required = false) List<Integer> positionIds
     ) {
 
-        return new ResponseEntity<Page<Employee>>(employeeService.findEmployeesByPageWithFilters(sortBy, sortDir,page, size,
-                id, fname, lname, departmentId, positionId), HttpStatus.OK);
+        return new ResponseEntity<Page<Employee>>(employeeService.findEmployeesByPageWithFilters(sortBy, sortDir, page, size,
+                id, fname, lname, departmentIds, positionIds), HttpStatus.OK);
     }
 
 
+    //    @GetMapping("{id}")
+//    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Integer employeeId) {
+//        return new ResponseEntity<Employee>(employeeService.findOne(employeeId), HttpStatus.OK);
+//    }
     @GetMapping("{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Integer employeeId) {
-        return new ResponseEntity<Employee>(employeeService.findOne(employeeId), HttpStatus.OK);
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable("id") Integer employeeId) {
+        Employee employee = employeeService.findOne(employeeId);
+        EmployeeResponse employeeResponse = modelMapper.map(employee, EmployeeResponse.class);
+        return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
     }
 
     // build create employee REST API
     @PostMapping("")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
         return new ResponseEntity<Employee>(employeeService.create(employee), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/many")
+    public ResponseEntity<List<Employee>> createEmployees(@RequestBody List<Employee> employeeList) {
+        employeeService.createMany((employeeList));
+        return new ResponseEntity<List<Employee>>(employeeList, HttpStatus.CREATED);
     }
 
     // build update employee REST API
@@ -75,8 +92,8 @@ public class EmployeeController {
     }
 
 //    @GetMapping("/department/{id}")
-//    public ResponseEntity<List<Employee>> getEmpByDepartment(@PathVariable("id") long id) {
-//        return new ResponseEntity<List<Employee>>(em.findEmployeesByDepartment(id), HttpStatus.OK);
+//    public ResponseEntity<List<Employee>> getEmpByDepartment(@PathVariable("id") Integer id) {
+//        return new ResponseEntity<List<Employee>>(employeeService.findByDept(id), HttpStatus.OK);
 //    }
 //
 //    @GetMapping("/positions/{id}")
@@ -97,5 +114,10 @@ public class EmployeeController {
     public ResponseEntity<String> deleteManyEmployee(@RequestParam("ids") List<Integer> ids) {
         employeeService.deleteMany(ids);
         return new ResponseEntity<String>("Employees deleted successfully!.", HttpStatus.OK);
+    }
+
+    @GetMapping("/dept/{idDept}/pos/{idPos}")
+    public ResponseEntity<List<Employee>> findDeptAndPos(@PathVariable("idDept") Integer idDept, @PathVariable("idPos") Integer idPos) {
+        return new ResponseEntity<List<Employee>>(employeeService.findByDeptAndPos(idDept, idPos), HttpStatus.OK);
     }
 }

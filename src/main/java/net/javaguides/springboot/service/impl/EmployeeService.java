@@ -1,5 +1,6 @@
 package net.javaguides.springboot.service.impl;
 
+import net.javaguides.springboot.Dto.EmployeeResponse;
 import net.javaguides.springboot.exception.ResourceNotFoundException;
 import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.repository.DepartmentRepository;
@@ -21,6 +22,7 @@ public class EmployeeService implements iEmployeeService {
     private EmployeeRepository employeeRepository;
     private PositionRepository positionRepository;
     private DepartmentRepository departmentRepository;
+    private EmployeeResponse employeeResponse;
 
     public EmployeeService(EmployeeRepository employeeRepository,
                            PositionRepository positionRepository,
@@ -32,13 +34,12 @@ public class EmployeeService implements iEmployeeService {
         this.departmentRepository = departmentRepository;
     }
 
-//    @Override
-//    public List<Employee> findAll() {
-//        return employeeRepository.findAll();
-//    }
+    @Override
+    public List<Employee> findAllData() {
+        return employeeRepository.findAll();
+    }
 
-
-//    @Override
+    //    @Override
 //    public Page<Employee> findEmployees(int page, int size) {
 ////        Pageable pageable = PageRequest.of(page , size, sort);
 //        Pageable pageable = PageRequest.of(page , size);
@@ -90,14 +91,24 @@ public class EmployeeService implements iEmployeeService {
 //        return employeeRepository.findEmployeesByPageWithFilters(pageable, id, fname, lname);
 //    }
 
+//    @Override
+//    public Page<Employee> findEmployeesByPageWithFilters(String sortBy, String sortDir, Integer page,
+//                                                         Integer size, Integer id, String fname, String lname,
+//                                                         Integer departmentId, Integer positionId) {
+//        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+//                : Sort.by(sortBy).descending();
+//        Pageable pageable = PageRequest.of(page, size, sort);
+//        return employeeRepository.findEmployeesByPageWithFilters(pageable, id, fname, lname, departmentId, positionId);
+//    }
+
     @Override
     public Page<Employee> findEmployeesByPageWithFilters(String sortBy, String sortDir, Integer page,
                                                          Integer size, Integer id, String fname, String lname,
-                                                         Integer departmentId, Integer positionId) {
+                                                         List<Integer> departmentIds, List<Integer> positionIds) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        return employeeRepository.findEmployeesByPageWithFilters(pageable, id, fname, lname, departmentId, positionId);
+        return employeeRepository.findEmployeesByPageWithFilters(pageable, id, fname, lname, departmentIds, positionIds);
     }
 
     @Override
@@ -106,10 +117,18 @@ public class EmployeeService implements iEmployeeService {
                 new ResourceNotFoundException("Employee", "Id", id));
     }
 
+//    @Override
+//    public List<Employee> findByDept(Integer id) {
+//        if(departmentRepository.existsById(id)) {
+//            return employeeRepository.findEmployeeByDept(id);
+//        }
+//        return null;
+//    }
+
     @Override
     public Employee create(Employee employee) {
         if (employee.getPositionId() == null && employee.getDepartmentId() == null) {
-            throw new Error("Re-check: departmentId, positionId and qualification are mandatory");
+            throw new Error("Re-check: departmentId, positionId are mandatory");
         }
         positionRepository.findById(employee.getPositionId()).orElseThrow(() ->
                 new ResourceNotFoundException("Position", "Id", employee.getPositionId()));
@@ -129,15 +148,12 @@ public class EmployeeService implements iEmployeeService {
         newEmployee.setDepartmentId(employee.getDepartmentId());
         newEmployee.setPositionId((employee.getPositionId()));
 
-
-//        Set<Qualification> qualifications = new HashSet<>();
-//        String[] qualIdStrParts= employeeDto.getQualToStr().split(",");
-//        List<String> qualIdList = Arrays.asList(qualIdStrParts);
-//        for(String qualId : qualIdList) qualifications.add(qualificationRepository.findById(Long.valueOf(qualId)).orElseThrow(()->
-//                new ResourceNotFoundException("Qualification", "Id", qualId)));
-//        employee.setQualifications(qualifications);
-
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public void createMany(List<Employee> employees) {
+        employees.forEach(this::create);
     }
 
     @Override
@@ -217,5 +233,10 @@ public class EmployeeService implements iEmployeeService {
     public void deleteMany(List<Integer> ids) {
         employeeRepository.deleteByIdIn(ids);
         System.out.println("delete employees" + ids);
+    }
+
+    @Override
+    public List<Employee> findByDeptAndPos(Integer idDept, Integer idPos) {
+        return employeeRepository.findEmployeesFromDeptAndPos(idDept, idPos);
     }
 }

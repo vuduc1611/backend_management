@@ -1,6 +1,7 @@
 package net.javaguides.springboot.repository;
 
 import net.javaguides.springboot.model.Department;
+import net.javaguides.springboot.model.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,5 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
     @Transactional
     @Query("DELETE  FROM Department d WHERE d.departmentId IN :ids")
     void deleteByIds(List<Integer> ids);
+
 }

@@ -11,4 +11,7 @@ public interface iPositionService {
     Position update(Position position);
     void delete(Integer id);
     List<Employee> findEmployeesByPosition(Integer id);
+
+    interface iExcelService {
+    }
 }
