@@ -84,15 +84,14 @@ public class ExcelUpload {
 //                            employee.setEmail(cell.getStringCellValue());
                             employee.setEmail(strValue);
                             break;
+//                        case 8:
+//                            employee.setPassword(strValue);
+//                            break;
                         case 8:
-//                            employee.setPassword(cell.getStringCellValue());
-                            employee.setPassword(strValue);
-                            break;
-                        case 9:
                             employee.setPositionId(Integer.parseInt(strValue));
 //                            employee.setPositionId((int) cell.getNumericCellValue());
                             break;
-                        case 10:
+                        case 9:
                             employee.setDepartmentId(Integer.parseInt(strValue));
 //                            employee.setDepartmentId((int) cell.getNumericCellValue());
                             break;

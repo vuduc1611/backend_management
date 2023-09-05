@@ -1,6 +1,5 @@
 package net.javaguides.springboot.service.impl;
 
-import net.javaguides.springboot.Dto.EmployeeResponse;
 import net.javaguides.springboot.exception.ResourceNotFoundException;
 import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.repository.DepartmentRepository;
@@ -22,7 +21,6 @@ public class EmployeeService implements iEmployeeService {
     private EmployeeRepository employeeRepository;
     private PositionRepository positionRepository;
     private DepartmentRepository departmentRepository;
-    private EmployeeResponse employeeResponse;
 
     public EmployeeService(EmployeeRepository employeeRepository,
                            PositionRepository positionRepository,
@@ -144,7 +142,7 @@ public class EmployeeService implements iEmployeeService {
         newEmployee.setAddress(employee.getAddress());
         newEmployee.setPhone(employee.getPhone());
         newEmployee.setEmail(employee.getEmail());
-        newEmployee.setPassword(employee.getPassword());
+//        newEmployee.setPassword(employee.getPassword());
         newEmployee.setDepartmentId(employee.getDepartmentId());
         newEmployee.setPositionId((employee.getPositionId()));
 
@@ -174,17 +172,9 @@ public class EmployeeService implements iEmployeeService {
         existingEmployee.setAddress(employee.getAddress());
         existingEmployee.setPhone(employee.getPhone());
         existingEmployee.setEmail(employee.getEmail());
-        existingEmployee.setPassword(employee.getPassword());
+//        existingEmployee.setPassword(employee.getPassword());
         existingEmployee.setPositionId(employee.getPositionId());
         existingEmployee.setDepartmentId(employee.getDepartmentId());
-
-
-//        Set<Qualification> qualifications = new HashSet<>();
-//        String[] qualIdStrParts= employeeDto.getQualToStr().split(",");
-//        List<String> qualIdList = Arrays.asList(qualIdStrParts);
-//        for(String qualId : qualIdList) qualifications.add(qualificationRepository.findById(Long.valueOf(qualId)).orElseThrow(()->
-//                new ResourceNotFoundException("Qualification", "Id", qualId)));
-//        existingEmployee.setQualifications(qualifications);
 
         return employeeRepository.save(existingEmployee);
     }

@@ -1,10 +1,7 @@
 package net.javaguides.springboot.repository;
 
-import net.javaguides.springboot.Dto.EmployeeResponse;
-import net.javaguides.springboot.model.Position;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import net.javaguides.springboot.model.Employee;
@@ -15,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -47,6 +43,10 @@ public  interface EmployeeRepository extends JpaRepository<Employee, Integer>, J
 
     @Query("SELECT e FROM Employee e WHERE 1 = 1 AND departmentId = :idDept AND positionId = :idPos")
     List<Employee> findEmployeesFromDeptAndPos(@PathVariable("idDept") Integer idDept, @PathVariable("idPos") Integer idPos);
+
+
+    @Query("SELECT e FROM Employee e WHERE e.email = :email")
+    Employee findEmployeeByEmail(@PathVariable("email") String email);
 
 //    @Query ("SELECT  FROM Employee e WHERE departmentID = :idDept")
 //    List<Position> findExistPosInDept(Integer idDept);

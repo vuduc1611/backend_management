@@ -44,8 +44,8 @@ public class Employee {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+//    @Column(name = "password", nullable = false)
+//    private String password;
 
     @Column(name = "department_id", nullable = false)
     private Integer departmentId;

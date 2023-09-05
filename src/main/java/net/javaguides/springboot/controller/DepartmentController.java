@@ -5,6 +5,7 @@ import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.service.impl.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class DepartmentController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<Department> getAll(){
         return departmentService.findAll();
     }
@@ -27,12 +29,14 @@ public class DepartmentController {
 
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Department> create(@RequestBody Department department){
         return new ResponseEntity<Department>(departmentService.create(department), HttpStatus.CREATED);
     }
 
 
     @PutMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Department> update(@RequestBody Department department){
         return new ResponseEntity<Department>(departmentService.update(department), HttpStatus.OK);
     }
@@ -40,6 +44,7 @@ public class DepartmentController {
 
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> delete(@PathVariable("id") Integer id){
         departmentService.delete(id);
         return new ResponseEntity<String>("Department deleted successfully!.", HttpStatus.OK);
@@ -47,10 +52,12 @@ public class DepartmentController {
     //ok
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<Employee>> getEmployeesByDept(@PathVariable("id") Integer id) {
         return new ResponseEntity<List<Employee>>(departmentService.fillEmployeeByDept(id), HttpStatus.OK);
     }
     @DeleteMapping("/many")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteDepartments(@RequestParam("ids") List<Integer> ids) {
         departmentService.deleteMany(ids);
         return new ResponseEntity<String>("Employees deleted successfully!.", HttpStatus.OK);
