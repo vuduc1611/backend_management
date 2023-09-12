@@ -1,4 +1,4 @@
-package net.javaguides.springboot.payload.response;
+package net.javaguides.springboot.login.response;
 
 
 import org.springframework.security.core.GrantedAuthority;

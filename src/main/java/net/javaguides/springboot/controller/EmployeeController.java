@@ -70,7 +70,7 @@ public class EmployeeController {
 
 
     @GetMapping("{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Integer employeeId) {
         return new ResponseEntity<Employee>(employeeService.findOne(employeeId), HttpStatus.OK);
     }
@@ -135,5 +135,11 @@ public class EmployeeController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<Employee>> findDeptAndPos(@PathVariable("idDept") Integer idDept, @PathVariable("idPos") Integer idPos) {
         return new ResponseEntity<List<Employee>>(employeeService.findByDeptAndPos(idDept, idPos), HttpStatus.OK);
+    }
+
+    @GetMapping("/findmany")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
+    public ResponseEntity<List<Employee>> findManyByIds(@RequestParam("ids") String ids) {
+        return new ResponseEntity<List<Employee>>(employeeService.findMany(ids), HttpStatus.OK);
     }
 }

@@ -18,4 +18,7 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
     @Query("DELETE  FROM Department d WHERE d.departmentId IN :ids")
     void deleteByIds(List<Integer> ids);
 
+//    @Query("SELECT departmentId , COUNT(*) AS count FROM Employee e GROUP BY departmentId")
+//    List<?> countEmployeesWithDepartment();
+
 }

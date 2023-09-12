@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface iProjectService {
     List<Project> findAll();
+    Project findOne(Integer id);
     Project create(Project project);
     Project update(Project project);
     void delete(Integer id);

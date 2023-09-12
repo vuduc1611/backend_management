@@ -1,4 +1,4 @@
-package net.javaguides.springboot.payload.request;
+package net.javaguides.springboot.login.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

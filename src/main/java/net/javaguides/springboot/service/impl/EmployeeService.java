@@ -150,6 +150,19 @@ public class EmployeeService implements iEmployeeService {
     }
 
     @Override
+    public List<Employee> findMany(String strList) {
+//        List<Optional<Employee>> employeeList = new ArrayList<>();
+//        Integer[] array = (Integer[]) Arrays.stream(listStr.split(",")).toArray();
+//        Arrays.stream(array).map(a -> employeeList.add(employeeRepository.findById(a)));
+        String[] strArray = strList.split(",");
+        Integer[] numberArray = new Integer[strArray.length];
+        for(int i = 0; i < strArray.length; i++ ) {
+            numberArray[i] = Integer.parseInt(strArray[i]);
+        }
+        return employeeRepository.findEmployeesByIds(List.of(numberArray));
+    }
+
+    @Override
     public void createMany(List<Employee> employees) {
         employees.forEach(this::create);
     }

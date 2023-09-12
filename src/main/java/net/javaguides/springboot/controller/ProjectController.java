@@ -24,6 +24,11 @@ public class ProjectController {
         return new ResponseEntity<List<Project>>(projectService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/id")
+    public ResponseEntity<Project> getOne(@PathVariable("id") Integer id) {
+        return new ResponseEntity<Project>(projectService.findOne(id), HttpStatus.OK);
+    }
+
     @PostMapping("")
     public ResponseEntity<Project> createProject(@RequestBody Project project) {
 

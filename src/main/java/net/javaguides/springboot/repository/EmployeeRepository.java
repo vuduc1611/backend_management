@@ -30,6 +30,11 @@ public  interface EmployeeRepository extends JpaRepository<Employee, Integer>, J
 
     @Modifying
     @Transactional
+    @Query("SELECT e FROM Employee e WHERE e.id IN :ids")
+    List<Employee> findEmployeesByIds(List<Integer> ids);
+
+    @Modifying
+    @Transactional
     @Query("DELETE  FROM Employee e WHERE e.id IN :ids")
     void deleteByIdIn(List<Integer> ids);
 

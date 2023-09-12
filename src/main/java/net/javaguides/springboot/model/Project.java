@@ -3,7 +3,6 @@ package net.javaguides.springboot.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
@@ -21,12 +20,18 @@ public class Project {
     @Column(name = "description")
     private String description;
 
-    @Column (name = "start")
-    private String start;
+    @Column (name = "createdAt")
+    private String createdAt;
 
-    @Column (name = "end")
-    private String end;
+    @Column (name = "completedAt")
+    private String completedAt;
 
-    @Column(name = "value")
+    @Column (name = "members")
+    private String membersId;
+
+    @Column (name = "ProjectManager")
+    private Integer idPM;
+
+    @Column (name = "value")
     private Integer value;
 }

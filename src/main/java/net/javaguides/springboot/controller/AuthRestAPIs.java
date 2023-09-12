@@ -3,10 +3,10 @@ package net.javaguides.springboot.controller;
 import net.javaguides.springboot.model.RoleName;
 import net.javaguides.springboot.model.Role;
 import net.javaguides.springboot.model.User;
-import net.javaguides.springboot.payload.request.LoginForm;
-import net.javaguides.springboot.payload.request.SignUpForm;
-import net.javaguides.springboot.payload.response.JwtResponse;
-import net.javaguides.springboot.payload.response.ResponseMessage;
+import net.javaguides.springboot.login.request.LoginForm;
+import net.javaguides.springboot.login.request.SignUpForm;
+import net.javaguides.springboot.login.response.JwtResponse;
+import net.javaguides.springboot.login.response.ResponseMessage;
 import net.javaguides.springboot.repository.RoleRepository;
 import net.javaguides.springboot.repository.UserRepository;
 import net.javaguides.springboot.security.jwt.JwtProvider;
@@ -46,12 +46,11 @@ public class AuthRestAPIs {
     @Autowired
     JwtProvider jwtProvider;
 
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
-//        if (!userRepository.existsByUsername(loginRequest.getUsername())) {
-//            return new ResponseEntity<>(new ResponseMessage("Username is not exist"), HttpStatus.NOT_FOUND);
-//        }
+
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));

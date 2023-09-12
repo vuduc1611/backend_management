@@ -14,6 +14,8 @@ public interface iEmployeeService {
 
     Employee create(Employee employee);
 
+    List<Employee> findMany (String listStr);
+
     void createMany(List<Employee> employees);
 
     Employee update(Employee employee);

@@ -2,6 +2,7 @@ package net.javaguides.springboot.service.impl;
 
 import lombok.Data;
 import net.javaguides.springboot.exception.ResourceNotFoundException;
+import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.model.Project;
 import net.javaguides.springboot.repository.ProjectRepository;
 import net.javaguides.springboot.service.iProjectService;
@@ -25,8 +26,16 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
+    public Project findOne(Integer id) {
+        return projectRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Project", "Id", id));
+    }
+    @Override
     public Project create(Project project) {
-        if(project.getName() == null || project.getDescription() == null || project.getStart() == null || project.getEnd() == null || project.getValue() == null) {
+        if(project.getName() == null || project.getDescription() == null
+                || project.getCreatedAt() == null  || project.getValue() == null
+                || project.getIdPM() == null  || project.getMembersId() == null
+        ) {
             throw new RuntimeException("Please check all flied are mandatory");
         }
         return projectRepository.save(project);
@@ -39,15 +48,18 @@ public class ProjectService implements iProjectService {
 
         existingProject.setDescription(project.getDescription());
         existingProject.setName(project.getName());
-        existingProject.setStart(project.getStart());
-        existingProject.setEnd(project.getEnd());
+        existingProject.setDescription(project.getDescription());
+        existingProject.setCreatedAt(project.getCreatedAt());
+        existingProject.setCompletedAt(project.getCompletedAt());
+        existingProject.setMembersId(project.getMembersId());
+        existingProject.setIdPM(project.getIdPM());
         existingProject.setValue(project.getValue());
         return projectRepository.save(existingProject);
     }
 
     @Override
     public void delete(Integer id) {
-        Project existingProject = projectRepository.findById(id).orElseThrow(()->
+        projectRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("Project", "Id", id));
 
         projectRepository.deleteById(id);

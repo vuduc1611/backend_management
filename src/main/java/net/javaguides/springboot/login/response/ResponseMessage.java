@@ -1,4 +1,4 @@
-package net.javaguides.springboot.payload.response;
+package net.javaguides.springboot.login.response;
 
 public class ResponseMessage {
     private String message;
