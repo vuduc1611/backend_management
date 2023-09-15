@@ -1,5 +1,7 @@
 package net.javaguides.springboot.controller;
 
+import net.javaguides.springboot.Dto.DtoUserChangePass;
+import net.javaguides.springboot.Dto.EmailDetails;
 import net.javaguides.springboot.Dto.MessageResponse;
 import net.javaguides.springboot.exception.ResourceNotFoundException;
 import net.javaguides.springboot.model.Employee;
@@ -7,6 +9,7 @@ import net.javaguides.springboot.model.User;
 import net.javaguides.springboot.repository.EmployeeRepository;
 import net.javaguides.springboot.repository.RoleRepository;
 import net.javaguides.springboot.repository.UserRepository;
+import net.javaguides.springboot.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +34,21 @@ public class UserController {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
 
-    public UserController(UserRepository userRepository, EmployeeRepository employeeRepository, RoleRepository roleRepository) {
+
+    public UserController(UserRepository userRepository, EmployeeRepository employeeRepository, RoleRepository roleRepository, UserDetailsServiceImpl userDetailsService) {
         super();
         this.userRepository = userRepository;
         this.employeeRepository = employeeRepository;
         this.roleRepository = roleRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping("{username}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')or hasRole('PM')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getInfoUser(@PathVariable("username") String username) {
         Optional<User> userCur = userRepository.findByUsername(username);
         Employee curEm = employeeRepository.findEmployeeByEmail(userCur.get().getEmail());
@@ -88,5 +95,17 @@ public class UserController {
             return new ResponseEntity<User>(user, HttpStatus.OK);
         }
         return null;
+    }
+
+    @PostMapping("/forgetPassword")
+    public  ResponseEntity<?> forgetPassword(@RequestBody EmailDetails emailDetails) {
+        if(userDetailsService.sendEmail(emailDetails.getEmail()) != "success") {
+            return new ResponseEntity<String>(userDetailsService.sendEmail(emailDetails.getEmail()), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<String>(userDetailsService.sendEmail(emailDetails.getEmail()), HttpStatus.OK);
+    }
+    @PutMapping("/changePassword")
+    public  ResponseEntity<?> changePassword(@RequestBody DtoUserChangePass dtoUserChangePass) {
+        return new ResponseEntity<String>(userDetailsService.changePassword(dtoUserChangePass), HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
 package net.javaguides.springboot.controller;
 
-import net.javaguides.springboot.Dto.CountEmployeeResponse;
+
 import net.javaguides.springboot.model.Department;
 import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.repository.DepartmentRepository;
@@ -29,7 +29,7 @@ public class DepartmentController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
     public List<Department> getAll(){
         return departmentService.findAll();
     }
@@ -60,7 +60,7 @@ public class DepartmentController {
     //ok
 
     @GetMapping("{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<List<Employee>> getEmployeesByDept(@PathVariable("id") Integer id) {
         return new ResponseEntity<List<Employee>>(departmentService.fillEmployeeByDept(id), HttpStatus.OK);
     }

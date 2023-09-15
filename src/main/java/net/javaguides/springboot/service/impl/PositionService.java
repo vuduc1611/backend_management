@@ -63,4 +63,9 @@ public class PositionService implements iPositionService {
     public List<Employee> findEmployeesByPosition(Integer id) {
         return employeeRepository.findEmployeeByPosition(id);
     }
+
+    @Override
+    public void deleteMany(List<Integer> ids) {
+        positionRepository.deleteByIds(ids);
+    }
 }

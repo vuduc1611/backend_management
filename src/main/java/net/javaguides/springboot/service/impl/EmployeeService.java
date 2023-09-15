@@ -199,39 +199,6 @@ public class EmployeeService implements iEmployeeService {
         employeeRepository.deleteById(id);
     }
 
-//    @Override
-//    public List<CustomEmployee> findEmployeesByDepartment(Long id) {
-//        List<CustomEmployee> customEmployees = new ArrayList<>();
-//
-//        employeeRepository.findEmployeeByRole(id).forEach(e -> {
-//            CustomEmployee ce = new CustomEmployee();
-//            ce.setId(e.getEmpId());
-//            ce.setLname(e.getLname());
-//            ce.setFname(e.getFname());
-//            ce.setAge(e.getAge());
-//            ce.setGender(e.getGender());
-//            ce.setEmail(e.getEmpEmail());
-//            customEmployees.add(ce);
-//        });
-//        return customEmployees;
-//    }
-//    @Override
-//    public List<CustomEmployee> findEmployeeByPosition(Long id) {
-//        List<CustomEmployee> customEmployees = new ArrayList<>();
-//        employeeRepository.findEmployeeByPosition(id).forEach(e -> {
-//            CustomEmployee ce = new CustomEmployee();
-//            ce.setId(e.getEmpId());
-//            ce.setLname(e.getLname());
-//            ce.setFname(e.getFname());
-//            ce.setAge(e.getAge());
-//            ce.setGender(e.getGender());
-//            ce.setEmail(e.getEmpEmail());
-//            customEmployees.add(ce);
-//        });
-//        return customEmployees;
-//    }
-
-
     @Override
     public void deleteMany(List<Integer> ids) {
         employeeRepository.deleteByIdIn(ids);

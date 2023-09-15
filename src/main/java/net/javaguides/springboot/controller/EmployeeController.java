@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class EmployeeController {
     @Autowired
     private ModelMapper modelMapper;
-
     private EmployeeService employeeService;
     private EmployeeRepository employeeRepository;
 
@@ -33,16 +32,8 @@ public class EmployeeController {
         this.employeeRepository = employeeRepository;
     }
 
-    // build get all employees REST API
-//    @GetMapping("/all")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
-//        List<EmployeeResponse> employeeResponseList = employeeService.findAllData().stream().map(employee -> modelMapper.map(employee, EmployeeResponse.class)).collect(Collectors.toList());
-//        return new ResponseEntity<List<EmployeeResponse>>(employeeResponseList, HttpStatus.OK);
-//    }
-
     @GetMapping("/all")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<List<Employee>> getAllEmployees() {
         return new ResponseEntity<List<Employee>>(employeeService.findAllData(), HttpStatus.OK);
     }
@@ -51,7 +42,7 @@ public class EmployeeController {
     // http://localhost:8080/api/employees
 
     @GetMapping("")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<Page<Employee>> getAllEmployees(
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortDir,
@@ -74,15 +65,7 @@ public class EmployeeController {
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Integer employeeId) {
         return new ResponseEntity<Employee>(employeeService.findOne(employeeId), HttpStatus.OK);
     }
-//    @GetMapping("{id}")
-//    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable("id") Integer employeeId) {
-//        Employee employee = employeeService.findOne(employeeId);
-//        EmployeeResponse employeeResponse = modelMapper.map(employee, EmployeeResponse.class);
-//        return new ResponseEntity<EmployeeResponse>(employeeResponse, HttpStatus.OK);
-//    }
 
-
-    // build create employee REST API
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
@@ -96,27 +79,13 @@ public class EmployeeController {
         return new ResponseEntity<List<Employee>>(employeeList, HttpStatus.CREATED);
     }
 
-    // build update employee REST API
-    // http://localhost:8080/api/employees/1
+
     @PutMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
         return new ResponseEntity<Employee>(employeeService.update(employee), HttpStatus.OK);
     }
 
-//    @GetMapping("/department/{id}")
-//    public ResponseEntity<List<Employee>> getEmpByDepartment(@PathVariable("id") Integer id) {
-//        return new ResponseEntity<List<Employee>>(employeeService.findByDept(id), HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/positions/{id}")
-//    public ResponseEntity<List<Employee>> findEmployeeByPosition(@PathVariable("id") long id) {
-//        return new ResponseEntity<List<Employee>>(employeeService.findEmployeeByPosition(id), HttpStatus.OK);
-//    }
-
-
-    // build delete employee REST API
-    // http://localhost:8080/api/employees/1
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") Integer id) {
@@ -132,7 +101,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/dept/{idDept}/pos/{idPos}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<List<Employee>> findDeptAndPos(@PathVariable("idDept") Integer idDept, @PathVariable("idPos") Integer idPos) {
         return new ResponseEntity<List<Employee>>(employeeService.findByDeptAndPos(idDept, idPos), HttpStatus.OK);
     }
