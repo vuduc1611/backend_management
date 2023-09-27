@@ -21,7 +21,7 @@ public class ExcelController {
     private excelToEmployees excelToEmployees;
 
     @PostMapping("/upload")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')" )
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         this.excelToEmployees.save(file);
         return ResponseEntity

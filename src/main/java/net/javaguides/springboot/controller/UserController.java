@@ -48,11 +48,10 @@ public class UserController {
     }
 
     @GetMapping("{username}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('PM') or hasRole('ADMIN')")
     public ResponseEntity<?> getInfoUser(@PathVariable("username") String username) {
         Optional<User> userCur = userRepository.findByUsername(username);
         Employee curEm = employeeRepository.findEmployeeByEmail(userCur.get().getEmail());
-//        System.out.println("check " + curEm);
         return new ResponseEntity<>(curEm, HttpStatus.OK);
     }
 

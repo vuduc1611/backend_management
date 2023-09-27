@@ -63,7 +63,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     + " \n\n"
                     + "You should login the system and change your password!" + " \n\n"
                     + "Thank for \n" + currentUser.getEmail());
-
             javaMailSender.send(msg);
 
             return "Success";
