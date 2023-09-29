@@ -12,7 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "${FE_API_URL}")
 @RestController
 @RequestMapping("/api/excel")
 public class ExcelController {

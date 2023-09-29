@@ -6,6 +6,7 @@ import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.repository.DepartmentRepository;
 import net.javaguides.springboot.service.impl.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "${FE_API_URL}")
 @RestController
 @RequestMapping("/api/departments")
 public class DepartmentController {
